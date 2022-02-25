@@ -1,0 +1,23 @@
+<html>
+<head>
+    <script type="module">
+        sessionStorage.setItem('id', {{id}});
+    </script>
+</head>
+<h1>Welcome {{name}}!</h1>
+
+Account ID:: {{accountId}}<br>
+
+Balance :: <span id="balance"></span><br>
+
+TopUp Amount: <input type="number" id="amount" min="0"/>
+<input type="submit" id="topUp"/><br>
+
+Transfer To:: <input type="text" id="toAccount"/>
+Transfer Amount: <input type="number" id="transferAmount" min="0"/>
+<input type="submit" id="transfer"/><br>
+
+<input type="hidden" id="accountId" value="{{accountId}}"/>
+<input type="hidden" id="name" value="{{name}}"/>
+<script type="module" src="/welcome.js"></script>
+</html>
