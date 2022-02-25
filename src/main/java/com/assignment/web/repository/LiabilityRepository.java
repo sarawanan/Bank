@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LiabilityRepository extends JpaRepository<Liability, Integer> {
-
+    Liability findByAccountId(String accountId);
 }

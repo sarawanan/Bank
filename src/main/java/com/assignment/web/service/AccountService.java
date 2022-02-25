@@ -24,6 +24,15 @@ public class AccountService {
     @Transactional
     public ResponseDto topUpBalance(RequestDto requestDto) {
         Account account = accountRepository.findByAccountId(requestDto.getAccountId());
+        Liability liability = liabilityRepository.findByAccountId(account.getAccountId());
+        if (liability.getAmount() > 0) {
+            double difference = requestDto.getAmount() - liability.getAmount();
+            if (difference > 0) {
+                account.setBalance(difference);
+            } else {
+                liability.setAmount(liability.getAmount() - requestDto.getAmount());
+            }
+        }
         account.setBalance(account.getBalance() + requestDto.getAmount());
         return ResponseDto.builder()
                 .balance(account.getBalance()).build();
