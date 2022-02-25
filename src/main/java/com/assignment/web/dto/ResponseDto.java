@@ -15,4 +15,5 @@ public class ResponseDto {
     private String accountId;
     private String toAccount;
     private double balance;
+    private double liability;
 }

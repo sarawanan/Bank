@@ -3,6 +3,7 @@ package com.assignment.web.service;
 import com.assignment.web.dto.RequestDto;
 import com.assignment.web.dto.ResponseDto;
 import com.assignment.web.entity.Account;
+import com.assignment.web.entity.Liability;
 import com.assignment.web.repository.AccountRepository;
 import com.assignment.web.repository.LiabilityRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -33,13 +34,23 @@ public class AccountService {
         Account fromAccount = accountRepository.findByAccountId(requestDto.getAccountId());
         Account toAccount = accountRepository.findByAccountId(requestDto.getToAccount());
 
-        //Credit amount to destination account
-        toAccount.setBalance(toAccount.getBalance() + requestDto.getAmount());
+        double fromAccountBalance = fromAccount.getBalance();
+        double balance = 0;
+        ResponseDto responseDto = ResponseDto.builder().build();
 
-        //Debit amount to source account
-        fromAccount.setBalance(fromAccount.getBalance() - requestDto.getAmount());
-
-        return ResponseDto.builder()
-                .balance(fromAccount.getBalance()).build();
+        if (requestDto.getAmount() > fromAccountBalance) {
+            toAccount.setBalance(toAccount.getBalance() + fromAccountBalance);
+            liabilityRepository.save(Liability.builder()
+                    .accountId(requestDto.getAccountId())
+                    .toAccount(requestDto.getToAccount())
+                    .amount(requestDto.getAmount() - fromAccountBalance)
+                    .build());
+            responseDto.setLiability(requestDto.getAmount() - fromAccountBalance);
+        } else {
+            balance = fromAccountBalance - requestDto.getAmount();
+        }
+        fromAccount.setBalance(balance);
+        responseDto.setBalance(balance);
+        return responseDto;
     }
 }

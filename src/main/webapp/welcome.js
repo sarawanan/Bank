@@ -28,5 +28,6 @@ $('transfer').addEventListener('click', () => {
         .then(response => {
             console.log(response);
             $('balance').innerText = response.balance;
+            $('liability').innerText = response.liability;
         });
 });
